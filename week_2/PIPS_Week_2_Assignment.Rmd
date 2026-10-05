@@ -1,0 +1,223 @@
+---
+title: "PIPS_Week_2_Assignment"
+output: html_document
+date: "2026-09-15"
+---
+#R1
+Make a scatterplot of the mean temperatures measured at Schiphol Airport. Put the time (year) on the x-axis and temperature (TAVG) on the y axis. The data can be loaded from here: https://raw.githubusercontent.com/hannesrosenbusch/PIPS_DATA/master/schiphol.csv
+
+```{r}
+
+airport <- read.csv("https://raw.githubusercontent.com/hannesrosenbusch/PIPS_DATA/master/schiphol.csv")
+plot(airport$year, airport$TAVG)
+```
+
+
+#R2
+The day that the titanic sank was bad, mostly because it bolsters present-day misogyny with plots like this:
+Can you recreate the barplot with the ggplot2 and titanic packages (dataset titanic_train has the passenger data)? Functions that might be useful are factor() and labs(fill = “my label”).
+```{r}
+install.packages("titanic")
+library(titanic)
+survival <- factor(titanic_train$Survived,
+            levels = c(0, 1),
+            labels = c("Dead", "Alive"))
+library("ggplot2")
+ggplot(data = titanic_train, aes(x = Sex, fill = survival)) +
+  geom_bar() +
+  labs(fill = "Did they make it?")
+
+```
+
+#R3
+Try out different themes from ggplot for the previous plot. You can find ggplot’s “complete themes” here: https://ggplot2.tidyverse.org/reference/ggtheme.html . Name one theme that you like and explain why you like it in ONE sentence. There are no right or wrong choices.
+```{r}
+ggplot(data = titanic_train, 
+  aes(x = Sex, fill = survival)) +
+  geom_bar() +
+  theme_light()
+
+ggplot(data = titanic_train, 
+  aes(x = Sex, fill = survival)) +
+  geom_bar() +
+  theme_dark()
+
+ggplot(data = titanic_train, 
+  aes(x = Sex, fill = survival)) +
+  geom_bar() +
+  theme_minimal() ## I prefer the minimal theme because it removes extra lines and makes the plot look simple/clean.
+```
+#R4
+Change three things about this plot that make it easier to understand and list each improvement in an extremely short bullet point comment.
+```{r}
+plot(cars$speed, cars$dist,
+     main = "Car Distance vs Speed",
+     xlab = "Speed",
+     ylab = "Distance",
+     pch = 20)
+#Added a title
+# Added x and y labels
+##Changed point style 
+```
+#R5
+Use the built-in ChickWeight dataset and recreate this ggplot. Make sure the bars are shown in the same order as here. Notice that you have to compute the chickens’ maximum weight before plotting. Useful things to look up: aggregate() as well as %in%
+```{r}
+install.packages("ggplot2")
+ChickWeight
+library(stats)
+library(ggplot2)
+
+?aggregate
+
+fivechick<- ChickWeight[ChickWeight$Chick %in% c(1, 20, 5, 40, 19), ]
+max_weight <- aggregate(weight ~ Chick, fivechick, max)
+max_weight$Chick <- factor(max_weight$Chick, 
+                            levels = c(1, 20, 5, 40, 19))
+ggplot(max_weight, aes(x = Chick, y = weight)) +
+  geom_col()
+
+```
+
+
+#R6
+Recreate this ggplot with the cars dataset.
+```{r}
+ggplot(data = cars, mapping = aes(speed, dist)) +
+  geom_point() +
+  geom_smooth(col = "blue")
+```
+#R7
+
+Ever wondered if guinea pigs’ teeth grow better when they take their vitamin C through orange juice rather than meds? Make a plot that answers this question with the ggstatsplot package using the ToothGrowth datset. Hint: when checking out the ggstatsplot package: this is a “between subject” comparison ;)
+
+```{r}
+install.packages("ggstatsplot")
+library(ggstatsplot) 
+ToothGrowth
+
+ggbetweenstats(
+  data = ToothGrowth,
+  x = supp,
+  y = len
+)
+```
+
+#R8
+Recreate this movable 3D plot with the plotly package and the human body measurements (in inches) dataset. You can load it from https://raw.githubusercontent.com/hannesrosenbusch/PIPS_DATA/master/body.csv.
+
+If plotly’s html plots don’t show up in your RStudio (while also giving no error), try this: htmlwidgets::saveWidget(myplot, "myplot.html")
+
+browseURL("myplot.html")
+
+```{r}
+install.packages("plotly")
+library(plotly)
+?plotly
+
+body <- read.csv("https://raw.githubusercontent.com/hannesrosenbusch/PIPS_DATA/master/body.csv")
+plot_ly(body, x = ~TotalHeight, 
+        y = ~ShoulderToWaist, 
+        z = ~HeadCircumference, 
+        opacity = 0.5)
+```
+
+#R9
+Create a gif file with this plot using the gganimate package. Maybe look up transition_reveal() in the process. You can get the data through the cran_downloads() function from the package cranlogs. The animation speed and other visual settings do not matter for grading. Set the values low to not challenge your computer too much. You might also need to download the gifski package for everything to look nice. Some programs (like preview) don’t show gifs, so you might want to save the gif and open it with your browser.
+
+```{r}
+install.packages("cranlogs")
+install.packages("gganimate")
+install.packages("gifski")
+library(gifski)
+library(cranlogs)
+library(gganimate)
+
+?transition_reveal
+?cran_downloads
+downs <- cran_downloads(packages = c("ggplot2", "plotly"),from = "2014-01-01", to = "2025-01-01")
+
+plot<- ggplot(downs, aes(date, count, color = package)) +
+  geom_line() +
+  transition_reveal(along = date)
+
+animation <- animate(
+  plot,
+  nframes = 50,
+  fps = 5,
+  renderer = gifski_renderer()
+)
+anim_save("cran_downloads.gif", animation)
+
+```
+
+#R10
+Look through your code for the first thirteen exercises. Try to improve the style of two solutions. Describe your edits here (in two lines of comments).
+```{r}
+##I improved the clarity of the plotting code from Q4 by indenting, breaking to new lines, and using consistent spacing. 
+
+##For Q8 I also improved the clarity fo the plotting code by breaking to a new line after each argument and alinging the indents.
+
+```
+
+#R11
+State in one sentence what the purpose of the code below is (running it and adding printouts helps) and list exactly five reasons why the code has very poor style (there are more). Do one reason per comment. Two or three words per reason should usually be enough.
+```{r}
+#purpose: checks if length of two string are equal after separating each letter
+a <- "dog"
+b = "cat"
+v = function(x){ ##poorly defined function name, show relate to purpose of function
+xx <- strsplit(x, "", )[[1]]
+yy <- strsplit(b, "", )[[1]] ##vague variable name assignment 
+lxx = length(xx) ##unclear variable naming, should be more specific
+lyy = length(yy)
+v <- lxx == lyy # reused function name for variable
+if(v) return(T)
+} ##clearly coded functions should be indented for readability
+v(a)
+```
+
+#R12
+Construct this matrix with one line of code and a single function (one pair of parentheses):
+```{r}
+matrix(1:9, 3, 3, byrow = TRUE) * 1:3
+```
+
+#R13
+Find the keyboard shortcut that automatically formats your highlighted R code nicely. Mention it in a comment, and use it from now on :)
+```{r}
+##control shift A
+```
+
+#R14
+Make a meme in RStudio about R coding. You can (but do not have to) use the memer package (installation requires install_github() function from the devtools package). Indicate in a comment whether you are fine with us posting the meme anonymously to the meme channel on Slack. The person contributing the meme getting most likes will be reposted in the following years that this course is given! These are the winners from the last years.
+```{r}
+install.packages("devtools")
+library(devtools)
+install_github("sctyner/memer")
+library(memer)
+meme_list()
+
+? memer
+meme_get("Y-U-NOguy") %>%
+  meme_text_bottom("Pregaming friday night plans with meme-making in R", size = 22)
+##yes you can post mine!
+```
+
+#Radv1
+Make some random art. Your code should produce a different piece of art when one changes the random seed atop your code. Only use built-in functions and/or ggplot.
+
+```{r}
+
+set.seed(359)
+n <- 100
+petal <- seq(0, 2 * pi, length.out = n)
+r <- 2 + runif(n, -0.5, 0.5)
+x <- r * cos(5 * petal) * cos(petal)
+y <- r * cos(5 * petal) * sin(petal)
+color <- sample(c("pink", "purple", "orange", "red", "yellow"), 1)
+
+ggplot(data.frame(x, y), aes(x, y)) +
+  geom_polygon(fill = color) +
+  theme_void()
+```
+

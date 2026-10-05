@@ -1,0 +1,209 @@
+---
+title: "PIPS_Week_3"
+output: html_document
+date: "2026-09-21"
+---
+Flow control
+```{r}
+red_flag = T
+sus_age = T
+ai_picture = T
+if(red_flag || sus_age){ ##or 
+  print("swipe no")
+}
+
+if(red_flag && sus_age){ ##and 
+  print("swipe no")
+}
+print("next")
+
+if(ai_picture){
+  print("swipe no")
+} else if (sus_age){
+  print("swipe yes")
+} else {
+  print("swipe yes")
+}
+
+
+ai_picture = c(T, T, F, F, T, F, T)
+length(ai_picture)
+
+ifelse(ai_picture, "swipe no", "swipe_yes")
+
+
+wallet <- 25
+while (wallet <= 0) {
+  dice <- sample(1:6, 3, replace = TRUE)
+  
+  if ((dice[1] != dice[2]) &&
+      (dice[1] != dice[3]) && (dice[2] != dice[3])) {
+    wallet = wallet + 1##winning
+  } else {
+    #losing
+    wallet = wallet - 2
+  }
+}
+
+
+wallet <- 25
+round_conter = 1
+  while(round_counter <= 10 || wallet < 30){
+    dice <- sample(1:6, 3, replace = TRUE)
+    if (length(unique(dice)) == length(dice)){
+    wallet = wallet + 1
+  } else {
+    wallet = wallet - 2
+  }
+
+round_conter = 1
+  for(round_counter in 1:3){
+    dice <- sample(1:6, 3, replace = TRUE)
+    if (length(unique(dice)) == length(dice)){
+    wallet = wallet + 1
+  } else {
+    wallet = wallet - 2
+  }
+print(round_counter)
+}
+
+for(ind in 1: length(letters)){
+  print(letters[ind])
+}
+
+
+##change all even numbers in vec to zero
+numbers <- sample(1:100, 100)
+
+## way 1
+for(i in 1:length(numbers)){
+  if (numbers[i] %% 2 == 0){
+    numbers[i] <- 0
+  }
+  print(numbers)
+}
+
+##way 2
+new_numbers <- ifelse(numbers %% 2 == 0, 0, numbers)
+
+##way 3
+numbers[numbers %% 2 == 0] = 0
+
+7 %% 2 == 0 ##remainder == 0
+
+
+###############################
+vec = 1:5
+var(vec)
+my_sum = 0
+for (my_number in vec){
+my_sum<- my_sum + my_number
+}
+print(my_sum)
+
+##iterate over the elements 
+for (literal_element in vec){
+  print(literal_element)
+}
+##iterate over the positions
+for(literal_position in 1:length(vec)){
+  print(vec[literal_position])
+}
+
+##
+m = matrix(sample(1:7, 100, replace = T), nrow = 25, ncol = 4)
+colnames(m) = c("racism", "drift_rate", "racial_attitude", "insincerity_of_smile")
+df = as.data.frame(m)
+
+##compute total racism score 
+racism_score = c()
+for (row in 1:nrow(df)){
+  ind_score = df$racism[row] +df$racial_attitude[row]
+  racism_score = c(racism_score, ind_score)
+}
+
+##which order are things printed?
+for(number in c(1,2,3)){
+  for(letter in c("A", "B", "C")){
+    print(c(number,letter))
+  }
+}
+
+##implicit loops
+##for racism e.g., sum all 4 variables for each participant
+for (i in 1:nrow(df)){
+  print(sum(df[i,]))
+}
+##simpler ways
+apply(df, 1, sum)
+
+sapply(df$racism, sqrt)
+
+
+#####
+
+judge_person = function(ai_picture){
+  
+  if(!is.logical(ai_picture)){
+    stop("ai picture should be logical!!")
+  }
+  
+  if(ai_picture){
+     return("swipe no") 
+  } else {
+    return("swipe yes")
+  }
+}
+
+judge_person(ai_picture = "yes")
+
+
+##################
+install.packages("dplyr")
+library(tidyverse)
+library(dplyr)
+class_grades = sample(1:10, 60, replace = T)
+low_scores = class_grades[class_grades < 5.5]
+mean_low<- mean(low_scores)
+print(mean_low)
+
+sample(1:10, 60, replace = T) %>% 
+  mean()
+
+
+mean_mpg  = mtcars %>% 
+  select(.,mpg) %>%  #select var
+  filter(mpg < 10.5) %>%#filter rows
+  summarize(mean(mpg)) #show mean
+
+
+data <- read.csv("https://raw.githubusercontent.com/hannesrosenbusch/PIPS_DATA/master/animals.csv")
+
+nondeadly<- data %>% 
+  filter(Deadly == FALSE)
+
+data %>% 
+  as.data.frame() %>% 
+  filter(Cuddleability > 4) %>% 
+  select(Animal, Cuddleability) %>% 
+  unlist()
+
+##pet rec system
+cud_imp = 4
+dead_imp = 6
+low_agg = 5
+price_imp = 
+
+dat<- data %>% 
+  select(c(Animal, Cuddleability, Aggression, Deadly)) %>% 
+  mutate(aggr_num = case_when(Aggression %in% c("Medium","High") ~ 0,
+                   Aggression %in% c("Low") ~ 3)) %>% 
+  mutate(price_num = as.numeric(gsub(",", "", sub("-.*", "", Price))) %>% 
+  mutate(our_score = Cuddleability * cud_imp + Deadly * -dead_imp + aggr_num * low_agg) %>% 
+  arrange(our_score, ascending = FALSE)
+
+case_when()
+  
+data
+
+```

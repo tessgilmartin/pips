@@ -1,0 +1,341 @@
+---
+title: "PiPS_Assignment_3"
+output: html_document
+date: "2026-09-28"
+---
+#R1
+This programmer has apparently confused Python code with R code. Fix the code so that it runs in R.
+```{r}
+meryls_oscars <- 3
+meryls_losses <- 18
+best_actress <- "Meryl Streep"
+if (best_actress == "Meryl Streep"){
+  meryls_oscars <- meryls_oscars + 1
+} else{
+  meryls_losses<- meryls_losses + 1
+}
+print(meryls_oscars)
+print(meryls_losses)
+```
+
+#R2
+Define the function box_hist which takes a numeric vector as its only argument and randomly plots either a boxplot or a histogram of the vector.
+```{r}
+box_hist <- function(n){
+  pplot <- rbinom(1, 1, .5)
+  
+  if (any %in% !as.numeric(n)){ ### checking for any non numerics in vector
+    if (pplot == 1 ){
+    plot(n)
+  } else{
+    hist(n)
+  }
+  }
+  else{
+    warning("input n is non-numeric!")
+  }
+}
+box_hist(c(4,5,6,6,7))
+```
+#R3
+
+The Netherlands’ head meteorologist wants to throw a birthday party tomorrow, so she asks one of her employees about the weather she can expect. The code below describes possible outcomes but there is one logical mistake in the code. Try out different scenarios (i.e., weather values) to find, comment, and fix the problem. (Tip: This has nothing to do with salary fairness.)
+
+```{r}
+predicted <- "rain"
+actual <- "rain"
+employee_salary <- 54000
+
+if (actual == "sun"){
+    print("Yay! Birthday moved outside!")
+    employee_salary <- employee_salary + 500
+  } else if (predicted != actual) {
+    employee_salary <- employee_salary - 500
+  } else if (predicted == actual) {
+    employee_salary <- employee_salary + 500
+  } else if (actual == "high wind") {
+    print("Boss blew off her bike into a canal.")
+    employee_salary <- employee_salary
+  }
+```
+
+#R4
+Come up with three research topics and ask your teammate how interested they are in each
+Each of their responses should be on a scale from 1-100 and stored in an ind. variable
+Combine the three scores into single vector called 'interests'
+Then run code below. Does it work correctly? If not, fix it but still include if() statement
+```{r, eval = FALSE}
+bpd <- 50
+psychosis <- 88
+habits <- 15
+interests <- c(bpd, psychosis, habits)
+interest_detected <- c()
+
+for(i in 1:length(interests)){
+if(interests[i] > 85) {
+  interest_detected[i] <- TRUE
+} else 
+  interest_detected[i] <- FALSE
+}
+print(interest_detected)
+
+```
+#R5 
+Create an if statement that prints Go to sleep! if the (computer’s system) time is between 00:00 (12am) and 05:00 (5am). You cannot use packages.
+```{r}
+hour<- as.numeric(format(Sys.time(), "%H"))
+if( 5 < hour & hour > 0){
+  print("Go to sleep!")
+} 
+
+?Sys.time()
+
+```
+
+#R6
+Read in the clinical data from here: https://raw.githubusercontent.com/hannesrosenbusch/schiphol_class/master/Kaggle_Dataset_Mental_Disorders.csv
+
+Make up a new psychological construct/scale that is a combination of the variables in the dataframe (e.g., Depletedness = 0.5 * Sadness + 0.8 * Exhausted). Combine AT LEAST three variables.
+
+Make a new boolean variable called Outlying which says whether people are outliers on your new construct. Use the ifelse() function and some made-up cut-off values to make the Outlying variable.
+```{r}
+clinc<- read.csv("https://raw.githubusercontent.com/hannesrosenbusch/schiphol_class/master/Kaggle_Dataset_Mental_Disorders.csv")
+negavtive_affect <-( 0.25 * clinc$sadness + 0.25 * clinc$Exhausted + 0.25 * (0 - clinc$optimism) + .25 * (0 - clinc$Euphoric))
+str(clinc)
+
+```
+
+#R7
+Write two for loops. The first loop should iterate over the columns of the dataframe retrieved above (https://raw.githubusercontent.com/hannesrosenbusch/schiphol_class/master/Kaggle_Dataset_Mental_Disorders.csv) and print out the datatype of the current variable. It should skip the variable Sexual.Activity by saying: Private information.
+
+The second for loop should iterate over the rows of the dataframe and print the Patient.Number along with the string “assessed successfully”. When you encounter a patient with NO Authority Respect and signs of Aggressive Response, print “Assessment postponed” and exit the for loop immediately.
+```{r}
+#Loop 1
+patients<- data.frame(read.csv("https://raw.githubusercontent.com/hannesrosenbusch/schiphol_class/master/Kaggle_Dataset_Mental_Disorders.csv"))
+for (i in colnames(patients)){
+  if(i == "Sexual.Activity"){
+    print("Private Information")
+    next()
+  }
+  print(class(i))
+}
+
+#Loop 2
+for (i in 1:nrow(patients)){
+  if(patients$Authority.Respect[i] == "NO" & patients$Aggressive.Response[i] == "YES"){
+    print(patients$Patient.Number[i])
+    print("Assessment Postponed")
+    break
+  }
+  print(patients$Patient.Number[i])
+  print("Assessed Successfully")
+}
+
+```
+
+#R8
+The Earth is becoming overpopulated. Currently, world leaders are discussing whether to euthanize everyone with a CO2 footprint of >120. Use a (nested) loop to simulate the CO2 footprints of a city that has exactly 1000 people left AFTER the mass sacrifices (i.e., your data should consist of 1000 CO2 footprint values). For this task, you can assume that CO2 footprints before the sacrifices were normally distributed with a mean of 100 and a standard deviation of 15. Plot your city’s 1000 footprint values in a ggplot2 histogram like this one:
+```{r}
+library(ggplot2)
+
+survivors<- c()
+
+while (length(survivors) < 1000) {
+   co_person<- rnorm(1, 100, 15)
+   if (co_person <= 120){
+     survivors <- c(survivors, co_person)
+   }
+}
+  print(survivors)
+  
+survive_df <- data.frame(survivors)
+?ggplot2
+ggplot(survive_df, mapping = aes(x = survivors)) +
+  geom_histogram()
+  
+```
+
+#R9
+Create the vector weird_fibonacci <- c(0, 3, 3, 12, 21, 57, 120, 291, 651, 1524) by using the previous two elements to generate the next element (for example, by dividing the previous element by 2 and then subtracting that from the element two places ago – this is not the answer) in a for loop. You can start with the vector c(0, 3).
+```{r}
+weird_fibonacci <- c(0,3)
+for(i in )
+```
+
+#R10
+```{r}
+
+```
+
+#R11
+max() finds the maximum of a vector. Below, we tried to do almost the same. However we also want the code to return the same number multiple times if multiple elements are the same maximum. However our code does not work! Can you fix the code (without using max())?
+```{r}
+these_numbers <- c(1, 3.1, 5.2, -1, 5.2)
+maximum <- numeric()
+for (i in 1:length(these_numbers) ) {
+  if (sum(these_numbers > i) == 0) {
+    maximum <- c(maximum, these_numbers[i])
+  }
+}
+```
+
+#R12
+```{r}
+minute<- as.numeric(format(Sys.time(), "%M"))
+year <- as.numeric(format(Sys.time(), "%Y"))
+
+while (year < 2040){
+  if (minute == 30){
+    print(Sys.time())
+  }
+}
+  
+
+```
+
+#R13
+The code below simulates a Verhulst equation that describes the growth of rabbits over time (where the variable rabbits represents 1000 rabbits). Observe that in the code above we created our own function in one line. We can also create a for loop in one line. Notice the confusing lack of curly brackets. Rewrite the function and for loop so that they both have multiple lines with indentations and brackets.
+
+```{r}
+verhulst <- function(x, rate_in, cap) rate_in*x*(cap-x)/cap
+rabbits <- c(.001)
+rate <- 2
+capacity <- 1000
+for (time in 2:50) rabbits[time] <- verhulst(rabbits[time-1], rate, capacity)
+plot(rabbits, type='l', xlab='time', bty='n')
+```
+
+#R14
+Using an explicit for loop, make three dim array of 4 by 50 by 3. first and last dimensions should contains normal random numbers with sd of 1 and mean by middle dimension index. for example, 12 numbers are placed into array[, 30,] drawn from normal dist with mean = 30 and sd = 1
+
+```{r}
+?array
+
+puzzle <- array(NA, dim = c(4,50,3))
+
+for(x in 1:3){
+  for(y in 1:50){
+    for(i in 1:4){
+      
+      if (x != 2){
+        puzzle[i,y,x] <- rnorm(1, 30, 1)
+      } 
+    }
+  }
+}
+
+
+```
+
+#R15
+```{r}
+what_do <- switch(caught_fish,
+                        large_trout = "eat",
+                        small_trout = "return",
+                        carp = ,
+                        perch = "sell")
+print(what_do)
+?switch
+```
+What is the variable what_do when caught_fish is "shoe"? Why?
+
+What string(s) can caught_fish be so that what_do is "sell"? Why? Read the help file for the function switch.
+
+#R16
+What does this code show us about the arguments of the rm() function?
+```{r}
+mcfly <- function(my_list) {
+  print("Great Scott! Erased from existence!")
+  rm(list = my_list, pos = 1)
+}
+mcfly('mcfly')
+?rm()
+```
+
+#R17
+Within the list t_tests you will find a complex list structure. Can you use sapply() to extract the 100 p.values and put them in a vector?
+
+Hint: Check out the inner attributes of ONE t_test result to learn about the names of the elements and the required indexing for extracting the p value. Then, check out the use of in-line functions within sapply.
+```{r}
+sapply(t_tests, p-value)
+
+t_tests <- replicate(100, t.test(rbeta(10, shape1=2, shape2=2), mu=.5), simplify = FALSE)
+```
+
+#R18
+Write a simple function and then show an example of how to use debug(). See the help file of debug and don’t forget to turn off debugging.
+```{r}
+
+```
+
+#R19
+a) write a function called assess_patient that accepts a numerical vector of seven mood ratings. call the argumnet week_ratings
+b) if input is not a vector with seven elements, the function should raise that error 
+c) if vector is not numeric, function should raise a warning that "input is not numeric" and attempt to coerce the input to numeric
+d) function should return your professional judgement about how the patient is doings. use at least two conditions 
+
+```{r}
+assess_patient <- function(week_ratings){
+  
+  ##if not in 7
+  if(length(week_ratings) != 7 ){
+    stop("error!")
+   ## geterrmessage()
+  }
+  if(!is.numeric(week_ratings)){
+    warning("Input is not numeric!")
+    week_ratings <- as.numeric(week_ratings)
+  }
+  ##Patient assessment
+  if(mean(rm.na(week_ratings)) < 10 && rm.na(min(week_ratings)) < 5){
+    return("Patient should have followup session.")
+  } else{
+    return("Patient is well.")
+  }
+  
+  return(week_ratings)
+}
+
+
+patient <- c("lol",4,3,4,5, 8, 9)
+assess_patient(patient)
+
+```
+#R20
+make alert function that takes two arg "sender" and "content"
+
+#R21
+
+
+
+```{r}
+words <- read.csv("https://www-cs-faculty.stanford.edu/~knuth/sgb-words.txt")
+
+monkey<- function(){
+monkey_word <- ""
+count <- 0
+while(!(monkey_word %in% words[,1])) {
+  monkey_word <- paste(sample(letters, 5), collapse = "")
+  count = count + 1
+}
+  return(count)
+}
+
+monkey()
+
+
+sims<- c()
+for (i in 1:100){
+ sims<- c(sims, monkey())
+}
+
+ggplot(data.frame(sims), mapping = aes(sims))+
+  geom_histogram() +
+  labs(title = "Monkey Attempts Until Real Word")
+  
+
+print(mean(sims))
+
+?paste()
+```
+
