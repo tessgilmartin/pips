@@ -13,6 +13,8 @@ if (best_actress == "Meryl Streep"){
   meryls_oscars <- meryls_oscars + 1
 } else{
   meryls_losses<- meryls_losses + 1
+return(meryls_oscars)
+return(meryls_losses)
 }
 print(meryls_oscars)
 print(meryls_losses)
@@ -23,19 +25,17 @@ Define the function box_hist which takes a numeric vector as its only argument a
 ```{r}
 box_hist <- function(n){
   pplot <- rbinom(1, 1, .5)
-  
-  if (any %in% !as.numeric(n)){ ### checking for any non numerics in vector
-    if (pplot == 1 ){
-    plot(n)
-  } else{
-    hist(n)
-  }
-  }
-  else{
-    warning("input n is non-numeric!")
+if(!is.numeric(n)){ 
+     stop("input n is non-numeric!")
+}
+  else if(pplot == 1){
+    return(plot(n))
+  } else {
+  return(hist(n))
   }
 }
-box_hist(c(4,5,6,6,7))
+
+box_hist(c(4,5,6,5,7))
 ```
 #R3
 
@@ -59,7 +59,7 @@ if (actual == "sun"){
   }
 ```
 
-#R4
+#R4-- CHECK
 Come up with three research topics and ask your teammate how interested they are in each
 Each of their responses should be on a scale from 1-100 and stored in an ind. variable
 Combine the three scores into single vector called 'interests'
@@ -69,6 +69,7 @@ bpd <- 50
 psychosis <- 88
 habits <- 15
 interests <- c(bpd, psychosis, habits)
+
 interest_detected <- c()
 
 for(i in 1:length(interests)){
@@ -80,11 +81,12 @@ if(interests[i] > 85) {
 print(interest_detected)
 
 ```
+
 #R5 
 Create an if statement that prints Go to sleep! if the (computer’s system) time is between 00:00 (12am) and 05:00 (5am). You cannot use packages.
 ```{r}
 hour<- as.numeric(format(Sys.time(), "%H"))
-if( 5 < hour & hour > 0){
+if( hour > 0 & hour < 5){
   print("Go to sleep!")
 } 
 
@@ -129,6 +131,7 @@ for (i in 1:nrow(patients)){
   }
   print(patients$Patient.Number[i])
   print("Assessed Successfully")
+  print("")
 }
 
 ```
@@ -159,12 +162,24 @@ ggplot(survive_df, mapping = aes(x = survivors)) +
 Create the vector weird_fibonacci <- c(0, 3, 3, 12, 21, 57, 120, 291, 651, 1524) by using the previous two elements to generate the next element (for example, by dividing the previous element by 2 and then subtracting that from the element two places ago – this is not the answer) in a for loop. You can start with the vector c(0, 3).
 ```{r}
 weird_fibonacci <- c(0,3)
-for(i in )
+for(i in 3:10){
+  next_num <- weird_fibonacci[i-2] * 3 + weird_fibonacci[i-1]
+  weird_fibonacci<- c(weird_fibonacci, next_num)
+}
+print(weird_fibonacci)
+    
 ```
 
 #R10
 ```{r}
+dice_matrix <- outer(1:6, 1:6, "+")
+dice_prob_dist <- table(dice_matrix) / 36
 
+for (i in 1:1000){
+  if (dice1 == 1)
+  
+  
+}
 ```
 
 #R11
@@ -173,13 +188,15 @@ max() finds the maximum of a vector. Below, we tried to do almost the same. Howe
 these_numbers <- c(1, 3.1, 5.2, -1, 5.2)
 maximum <- numeric()
 for (i in 1:length(these_numbers) ) {
-  if (sum(these_numbers > i) == 0) {
+  if (sum(these_numbers > these_numbers[i]) == 0) {
     maximum <- c(maximum, these_numbers[i])
   }
 }
+print(maximum)
 ```
 
 #R12
+Create a while loop that tells you the time once every 30 minutes, and doesn’t end until 2040. Warning: you should know how to end ongoing computation because a successful answer will not stop until 2040!
 ```{r}
 minute<- as.numeric(format(Sys.time(), "%M"))
 year <- as.numeric(format(Sys.time(), "%Y"))
@@ -197,12 +214,25 @@ while (year < 2040){
 The code below simulates a Verhulst equation that describes the growth of rabbits over time (where the variable rabbits represents 1000 rabbits). Observe that in the code above we created our own function in one line. We can also create a for loop in one line. Notice the confusing lack of curly brackets. Rewrite the function and for loop so that they both have multiple lines with indentations and brackets.
 
 ```{r}
-verhulst <- function(x, rate_in, cap) rate_in*x*(cap-x)/cap
+verhulst <- function(x, rate_in, cap) {
+  rate_in * x * (cap - x) / cap }
+  
+
 rabbits <- c(.001)
-rate <- 2
-capacity <- 1000
-for (time in 2:50) rabbits[time] <- verhulst(rabbits[time-1], rate, capacity)
-plot(rabbits, type='l', xlab='time', bty='n')
+  rate <- 2
+  capacity <- 1000
+
+  for (time in 2:50) {
+    rabbits[time] <- verhulst(rabbits[time - 1],
+                              rate,
+                              capacity)
+  }
+
+plot(rabbits,
+     type = 'l',
+     xlab = 'time',
+     bty = 'n')
+
 ```
 
 #R14
@@ -228,7 +258,12 @@ for(x in 1:3){
 ```
 
 #R15
+What is the variable what_do when caught_fish is "shoe"? Why?
+NULL, because "shoe" is not listed as a possibility within the switch function and so there is no corresponding string it will return.
+What string(s) can caught_fish be so that what_do is "sell"? Why? Read the help file for the function switch.
+what_do returns "sell" when caught_fish is carp or perch. The comma assigned to carp (it does not have its own string) passes it to the next case, which here is "sell"
 ```{r}
+caught_fish <- "carp"
 what_do <- switch(caught_fish,
                         large_trout = "eat",
                         small_trout = "return",
@@ -237,16 +272,14 @@ what_do <- switch(caught_fish,
 print(what_do)
 ?switch
 ```
-What is the variable what_do when caught_fish is "shoe"? Why?
-
-What string(s) can caught_fish be so that what_do is "sell"? Why? Read the help file for the function switch.
 
 #R16
 What does this code show us about the arguments of the rm() function?
+It will remove the list from a specified environment. Here it is the global environment. 
 ```{r}
 mcfly <- function(my_list) {
   print("Great Scott! Erased from existence!")
-  rm(list = my_list, pos = 1)
+  rm(list = my_list, pos = 3)
 }
 mcfly('mcfly')
 ?rm()
@@ -257,14 +290,37 @@ Within the list t_tests you will find a complex list structure. Can you use sapp
 
 Hint: Check out the inner attributes of ONE t_test result to learn about the names of the elements and the required indexing for extracting the p value. Then, check out the use of in-line functions within sapply.
 ```{r}
-sapply(t_tests, p-value)
+?sapply
 
 t_tests <- replicate(100, t.test(rbeta(10, shape1=2, shape2=2), mu=.5), simplify = FALSE)
+pvals<- sapply(t_tests, function(x) x$p.value)
+print(pvals)
 ```
 
 #R18
 Write a simple function and then show an example of how to use debug(). See the help file of debug and don’t forget to turn off debugging.
 ```{r}
+?debug
+
+happy_day<- function(day_of_week){
+  if (day_of_week == "Monday"){
+    print("Happy Monday!")
+    } else if(day_of_week == "Tuesday"){
+    print("Happy Tuesday!")
+    } else if (day_of_week == "Wednesday"){
+       print("Happy Wednesday!")
+    } else if (day_of_week == "Thursday"){
+       print("Happy Thursday!")
+    }else if (day_of_week == "Friday"){
+       print("Happy Friday!")
+    }else if (day_of_week == "Saturday"){
+       print("Happy Saturday!")
+    }else if (day_of_week == "Sunday"){
+       print("Happy Sunday!")
+    }
+    }
+  debug(happy_day)
+happy_day("Tuesday")
 
 ```
 
@@ -279,15 +335,14 @@ assess_patient <- function(week_ratings){
   
   ##if not in 7
   if(length(week_ratings) != 7 ){
-    stop("error!")
-   ## geterrmessage()
+    stop("error! input must have exactly 7 elements")
   }
   if(!is.numeric(week_ratings)){
     warning("Input is not numeric!")
     week_ratings <- as.numeric(week_ratings)
   }
   ##Patient assessment
-  if(mean(rm.na(week_ratings)) < 10 && rm.na(min(week_ratings)) < 5){
+  if(mean(week_ratings, na.rm = TRUE) < 10 && (min(week_ratings, na.rm = TRUE)) < 5){
     return("Patient should have followup session.")
   } else{
     return("Patient is well.")
@@ -296,18 +351,14 @@ assess_patient <- function(week_ratings){
   return(week_ratings)
 }
 
-
-patient <- c("lol",4,3,4,5, 8, 9)
+patient <- c("lol",4,3,4,5,8, 9, 7)
 assess_patient(patient)
 
 ```
 #R20
 make alert function that takes two arg "sender" and "content"
 
-#R21
-
-
-
+#Radv1
 ```{r}
 words <- read.csv("https://www-cs-faculty.stanford.edu/~knuth/sgb-words.txt")
 
@@ -315,7 +366,7 @@ monkey<- function(){
 monkey_word <- ""
 count <- 0
 while(!(monkey_word %in% words[,1])) {
-  monkey_word <- paste(sample(letters, 5), collapse = "")
+  monkey_word <- paste(sample(letters, 5), collapse = "") 
   count = count + 1
 }
   return(count)
@@ -337,5 +388,11 @@ ggplot(data.frame(sims), mapping = aes(sims))+
 print(mean(sims))
 
 ?paste()
+```
+
+#Radv2
+```{r}
+
+prettyhist(mpg$hwy, "Highway MPG", "Highway MPG Histogram")
 ```
 
